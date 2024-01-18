@@ -2,6 +2,8 @@ require 'net/smtp'
 require './env'
 require 'csv'
 
+body = File.read("body.txt")
+
 # Connect to the SMTP server and send the email
 Net::SMTP.start(
   ENV["SETTINGS__SMTP__ADDRESS"],
@@ -17,7 +19,7 @@ Net::SMTP.start(
       To: #{row["email"]}
       Subject: #{ENV["SUBJECT"]}
 
-      #{File.read("body.txt")}
+      #{body}
     MESSAGE
   end
 end
