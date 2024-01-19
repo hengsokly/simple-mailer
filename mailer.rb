@@ -14,12 +14,16 @@ Net::SMTP.start(
   :login
 ) do |smtp|
   CSV.foreach('./receivers.csv', headers: true) do |row|
-    smtp.send_message(<<~MESSAGE, ENV["SETTINGS__SMTP__FROM"], row["email"])
+    message = <<~MESSAGE
       From: #{ENV["SETTINGS__SMTP__FROM"]}
       To: #{row["email"]}
+      MIME-Version: 1.0
+      Content-type: text/html
       Subject: #{ENV["SUBJECT"]}
 
       #{body}
     MESSAGE
+
+    smtp.send_message(message, ENV["SETTINGS__SMTP__FROM"], row["email"])
   end
 end
